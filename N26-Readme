@@ -5,7 +5,7 @@ N26Products (Child)
 N26CountryCodes(Master)
 N26ProductTypes(Master)
 
-1.Since the as was to have a button or feature on Case Standard page layout I have choosen Lightning out
+1.Since the ask was to have a button or feature on Case Standard page layout I have choosen Lightning out
  -Wrtten a VF Page named N26ProductsLookupPage.vfp and embed this in stadard case page layout which uses Lighting App   N26ProductsDisplayApp and create N26ProductsDisplay.cmp . 
  -VF have extension CaseProductExtension.apxc which queries Contact object to get product__c and Home_Country_code__c
  - used Application event to link up button on VF and Lightning.
