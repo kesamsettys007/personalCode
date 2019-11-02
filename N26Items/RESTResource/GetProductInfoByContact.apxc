@@ -1,0 +1,79 @@
+@RestResource(urlMapping='/GetN26ProductInfo/*')
+global with sharing class GetProductInfoByContact {
+    global class ProductInfoResponseWrapper {           
+        public String productType;
+        public String countryCode;
+        public Decimal costPerMonth;
+        public Decimal ATMFEE;
+        public Decimal cardReplaceCost; 
+   }
+    global class ErrorObject {
+        public String errorCode;
+        public String message;
+        public ErrorObject(String errorCode, string message){
+            this.errorCode = errorCode;
+            this.message = message;
+        }
+   }
+    @HttpGet
+    global static void doGet() {
+        List<ProductInfoResponseWrapper> listOfProducts= new List<ProductInfoResponseWrapper>();
+        ProductInfoResponseWrapper responseJSON= new ProductInfoResponseWrapper();
+        String emailId = RestContext.request.params.get('emailId');
+        try{
+            if(null!=emailId){
+               List<Contact> contactsList= [select product__c,Home_Country__c from Contact where Email=:emailId limit 1];
+               String productCd= contactsList.get(0).product__c;
+               String countryCd = contactsList.get(0).Home_Country__c ;
+                if(null!=productCd && null!=countryCd){
+                    List<N26Products__c> productCodes = new List<N26Products__c>([select Product_Type__r.Name,Country_Code__r.Name,Cost_Per_Month__c,ATMFEE__c,Card_Replace_Cost__C from N26Products__c where country_code__c=:countryCd and product_Type__c=:productCd ]);
+                    if(null!=productCodes){
+                        for(N26Products__c prods:productCodes){
+                            responseJSON.productType=prods.Product_Type__r.Name;
+                            responseJSON.countryCode=prods.Country_Code__r.Name;
+                            responseJSON.costPerMonth=prods.Cost_Per_Month__c;
+                            responseJSON.ATMFEE=prods.ATMFEE__c;
+                            responseJSON.cardReplaceCost=prods.Card_Replace_Cost__C;
+                            listOfProducts.add(responseJSON);
+                        }
+                         RestContext.response.responseBody = Blob.valueOf(JSON.serialize(listOfProducts));
+                    }else{
+                        ErrorObject[] errs = new ErrorObject[]{ 
+                          new ErrorObject('Error', 'No Products associated to this contact')
+                        };
+                        RestContext.response.responseBody = Blob.valueOf(JSON.serialize(errs));
+                    }
+                }else{
+                    ErrorObject[] errs = new ErrorObject[]{ 
+                        new ErrorObject('Error', 'Product Code associated to this contact is invalid.')
+                    };
+                    RestContext.response.responseBody = Blob.valueOf(JSON.serialize(errs));
+                }
+            }else {
+                ErrorObject[] errs = new ErrorObject[]{ 
+                  new ErrorObject('Error', 'Email ID is Empty')
+                };
+                RestContext.response.responseBody = Blob.valueOf(JSON.serialize(errs));
+            }
+        }
+        catch(System.StringException e){
+            RestContext.response.statusCode = 400;
+            ErrorObject[] errs = new ErrorObject[]{ 
+              new ErrorObject('BAD_REQUEST', 'Param: Email ID is not a valid Id')
+            };
+            RestContext.response.responseBody = Blob.valueOf(JSON.serialize(errs));
+        }catch(System.QueryException e){
+            RestContext.response.statusCode = 404;
+            ErrorObject[] errs = new ErrorObject[]{ 
+              new ErrorObject('NOT_FOUND', 'Requested email not found')
+            };
+            RestContext.response.responseBody = Blob.valueOf(JSON.serialize(errs));
+        }catch(Exception e){ //something else happened
+            RestContext.response.statusCode = 500;
+            ErrorObject[] errs = new ErrorObject[]{ 
+              new ErrorObject('BAD_REQUEST', e.getMessage())
+            };
+            RestContext.response.responseBody = Blob.valueOf(JSON.serialize(errs));
+        } 
+    }
+}

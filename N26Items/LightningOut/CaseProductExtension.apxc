@@ -1,0 +1,12 @@
+public class CaseProductExtension {
+    public Id caseId {get;set;}
+    public Id productType {get;set;}
+    public Id countryCode {get;set;}
+    public Id contactId {get;set;}
+    public CaseProductExtension(ApexPages.StandardController stdController){
+        caseId = ApexPages.CurrentPage().getParameters().get('id');
+        contactId=[Select ContactId FROM Case Where Id = :caseId limit 1].contactId;
+        productType=[Select product__c from Contact where Id=:contactId limit 1].product__c;
+        countryCode=[Select Home_Country__c from Contact where Id=:contactId limit 1].Home_Country__c;
+    }
+}

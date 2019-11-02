@@ -1,0 +1,29 @@
+<aura:component implements="flexipage:availableForRecordHome,force:appHostable,lightning:actionOverride,force:hasRecordId" 
+                controller = "N26ProductlistController">
+    <aura:attribute name="products" type="list"/>
+	<aura:attribute name="productType" type="String"/>
+	<aura:attribute name="countryCode" type="String"/>
+    <aura:handler event="c:GetProducts" action="{!c.doinit}" />
+    <table class="slds-table slds-table--bordered slds-table--striped slds-table--cell-buffer slds-table--fixed-layout">
+        <thead>
+          <tr class="slds-text-heading--label">
+		    <th scope="col"><span class="slds-truncate">Product Code</span></th>
+            <th scope="col"><span class="slds-truncate">Country Code</span></th>
+			<th scope="col"><span class="slds-truncate">Cost Per Month</span></th>
+            <th scope="col"><span class="slds-truncate">ATM FEE</span></th>
+			<th scope="col"><span class="slds-truncate">Card Replacement Cost</span></th>
+          </tr>
+        </thead>
+        <tbody>
+            <aura:iteration items="{!v.products}" var ="productsVal">
+          <tr>
+          <td><div class="slds-truncate" title="">{!productsVal.Product_Type__r.Name}</div></td>
+          <td><div class="slds-truncate" title="">{!productsVal.Country_Code__r.Name}</div></td>
+          <td><div class="slds-truncate" title="">{!productsVal.Cost_Per_Month__c}</div></td>
+          <td><div class="slds-truncate" title="">{!productsVal.ATMFEE__C}</div></td>
+          <td><div class="slds-truncate" title="">{!productsVal.Card_Replace_Cost__c}</div></td>
+          </tr>
+           </aura:iteration>                           
+        </tbody>
+    </table>
+</aura:component>

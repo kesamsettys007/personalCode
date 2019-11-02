@@ -1,0 +1,41 @@
+<apex:page standardController="Case" extensions="CaseProductExtension" title="Case Products" doctype="html-5.0"
+    showHeader="true" showQuickActionVfHeader="false" sidebar="false" standardStylesheets="true" id="CaseProductPage">
+    <apex:slds />
+    <apex:includeLightning />
+    <html xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+        <meta http-equiv="X-UA-Compatible" content="IE=10; IE=9; IE=8; IE=7; IE=EDGE" />
+        <div class="slds">
+            <div class="slds-p-around--large" style="padding-bottom:0; padding-top:10px">
+            <apex:form id="productPageForm" onkeypress="return event.keyCode != 13;">
+                    <apex:pageBlock id="productPageBlock">
+                        <apex:pageBlockButtons >
+                            <apex:commandButton styleClass="slds-button_neutral getProducts-button" value="Get Products" />
+                        </apex:pageBlockButtons>
+                    </apex:pageBlock>
+             </apex:form>
+            </div>
+        </div>
+
+        <script>
+            
+            (function() {
+                document.querySelector('.getProducts-button').addEventListener('click', function(event) {
+                    event.preventDefault();
+                    $Lightning.use('c:N26ProductsDisplayApp', function() {
+                        $A.get('e.c:GetProducts').fire();
+                    });
+                });
+                $Lightning.use('c:N26ProductsDisplayApp', function() {
+                        $Lightning.createComponent(
+                            'c:N26ProductsDisplay',
+                            {
+                                 productType: '{!productType}',
+                                 countryCode: '{!countryCode}'
+                            }
+                        ); 
+                });
+                
+            })();
+        </script>
+    </html>
+</apex:page>
