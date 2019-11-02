@@ -1,0 +1,25 @@
+DataModel
+---------
+As per given table I have created 3 different objects.
+N26Products (Child)
+N26CountryCodes(Master)
+N26ProductTypes(Master)
+
+1.Since the as was to have a button or feature on Case Standard page layout I have choosen Lightning out
+ -Wrtten a VF Page named N26ProductsLookupPage.vfp and embed this in stadard case page layout which uses Lighting App   N26ProductsDisplayApp and create N26ProductsDisplay.cmp . 
+ -VF have extension CaseProductExtension.apxc which queries Contact object to get product__c and Home_Country_code__c
+ - used Application event to link up button on VF and Lightning.
+
+
+2.Created RestResource GetProductInfoByContact.apxc class for exposing it to external systems.
+  -need to pass emailId as query parameter to '/GetN26ProductInfo' URI
+  -Queried Contact object using email id and get the product_Type__c and Country_code__c
+  -Queried N26Products object to get List of produts associated to the above contact.
+  -Converted above list using JSON serialization and attached it to RESTContext Response.
+  -Applied proper exception handling and HTTPstatus codes for error handling.
+  -used oAuth2 mechanism by creating connected app to get product details of this API service with security id and security token.
+  
+  
+
+
+
