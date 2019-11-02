@@ -1,0 +1,32 @@
+@istest
+public class TestGetProductInfoByContact {
+	public static testMethod void getProducts() {
+        Contact contactRecord = new Contact();
+		contactRecord.Email='kesamsettys@gmail.com';
+		contactRecord.FirstName ='Venkata Sudhakar';
+        contactRecord.LastName ='Kesamsetty'; 
+        insert contactRecord;
+        Test.startTest();
+        RestRequest req = new RestRequest(); 
+        RestResponse res = new RestResponse();
+        req.requestURI = '/services/apexrest/GetN26ProductInfo'; 
+        req.addParameter('emailId', contactRecord.Email);
+        req.httpMethod = 'GET';
+        RestContext.request = req;
+        RestContext.response = res;
+        GetProductInfoByContact.doGet();
+        Test.stopTest();   
+    }
+    public static testMethod void getProductswithWrongEmail() {
+        Test.startTest();
+        RestRequest req = new RestRequest(); 
+        RestResponse res = new RestResponse();
+        req.requestURI = '/services/apexrest/GetN26ProductInfo'; 
+        req.addParameter('emailId', 'kesamsettys');
+        req.httpMethod = 'GET';
+        RestContext.request = req;
+        RestContext.response = res;
+        GetProductInfoByContact.doGet();
+        Test.stopTest();   
+    }
+}
