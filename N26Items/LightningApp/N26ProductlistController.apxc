@@ -1,6 +1,6 @@
 public class N26ProductlistController {
     @AuraEnabled
-    public static List<N26Products__c> getProductListCodes(String countryCode,String productType){
+    public static List<N26Products__c> getProductList(String countryCode,String productType){
       list<N26Products__c> productCodes = new List<N26Products__c>([select Product_Type__r.Name,Country_Code__r.Name,Cost_Per_Month__c,ATMFEE__c,Card_Replace_Cost__C from N26Products__c where country_code__c=:countryCode and product_Type__c=:productType ]);
 
         return productCodes;
