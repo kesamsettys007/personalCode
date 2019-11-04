@@ -2,6 +2,8 @@
     showHeader="true" showQuickActionVfHeader="false" sidebar="false" standardStylesheets="true" id="CaseProductPage">
     <apex:slds />
     <apex:includeLightning />
+    <apex:includeScript value="/lightning/lightning.out.js" />
+
     <html xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
         <meta http-equiv="X-UA-Compatible" content="IE=10; IE=9; IE=8; IE=7; IE=EDGE" />
         <div class="slds">
@@ -10,6 +12,7 @@
                     <apex:pageBlock id="productPageBlock">
                         <apex:pageBlockButtons >
                             <apex:commandButton styleClass="slds-button_neutral getProducts-button" value="Get Products" />
+                            <div id="lightning" />
                         </apex:pageBlockButtons>
                     </apex:pageBlock>
              </apex:form>
@@ -27,11 +30,12 @@
                 });
                 $Lightning.use('c:N26ProductsDisplayApp', function() {
                         $Lightning.createComponent(
-                            'c:N26ProductsDisplay',
+                           'c:N26ProductsDisplay',
                             {
                                  productType: '{!productType}',
                                  countryCode: '{!countryCode}'
-                            }
+                            },
+                            'lightning'
                         ); 
                 });
                 
