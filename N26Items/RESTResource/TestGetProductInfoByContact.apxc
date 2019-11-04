@@ -26,7 +26,12 @@ public class TestGetProductInfoByContact {
         req.httpMethod = 'GET';
         RestContext.request = req;
         RestContext.response = res;
+        RestContext.response.statusCode = 400;
         GetProductInfoByContact.doGet();
+        GetProductInfoByContact.ErrorObject[] errs = new GetProductInfoByContact.ErrorObject[]{ 
+              new GetProductInfoByContact.ErrorObject('BAD_REQUEST', 'Param: Email ID is not a valid Id')
+            };
+        system.assertEquals(RestContext.response.responseBody,Blob.valueOf(JSON.serialize(errs)));
         Test.stopTest();   
     }
 }
